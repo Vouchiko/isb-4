@@ -9,6 +9,15 @@ from matplotlib import pyplot as plt
 
 
 def checking_hash(bin: int, config: dict, number: int) -> int:
+    """
+    Compares the hash of the received card with an existing one
+    Parameters:
+        bin(int): the first 6 digits of card
+        config(dict): input data
+        number(int): generated card digits
+    Return value :
+        (int): number, if the hash matches, otherwise False
+    """
     if hashlib.sha256(f'{bin}{number:06d}{config["last_digits"]}'.encode()).hexdigest() == f'{config["hash"]}':
         return int(f'{bin}{number:06d}{config["last_digits"]}')
     else:
@@ -16,6 +25,12 @@ def checking_hash(bin: int, config: dict, number: int) -> int:
 
 
 def searching(config: dict, processes: int) -> None:
+    """
+    Is looking for a card with the same hash
+    Parameter:
+        config(dict): input data
+        processes(int): number of processes
+    """
     flag = False
     with mp.Pool(processes) as p:
         for bin in config['first_digits']:
@@ -44,6 +59,13 @@ def searching(config: dict, processes: int) -> None:
 
 
 def luhn(config: dict) -> bool:
+    """
+    Checks the number for correctness by the luhn algorithm
+    Parameters:
+        config(dict): input data
+    Return value:
+        (bool): True if everything came together, otherwise - False
+    """
     try:
         with open(config["found_card"]) as f:
             found_card = json.load(f)
@@ -70,6 +92,11 @@ def luhn(config: dict) -> bool:
 
 
 def get_stats(config: dict) -> None:
+    """
+    Preserves the dependence of the hash collision search time on the number of processes
+    Parameters:
+        config(dict): input data
+    """
     times = []
     for i in range(int(config["processes_amount"])):
         start = time()
