@@ -39,3 +39,29 @@ def searching(config: dict, processes: int) -> None:
                 break
     if not flag:
         logging.info('Card not found')
+
+
+def luhn(config: dict) -> bool:
+    try:
+        with open(config["found_card"]) as f:
+            found_card = json.load(f)
+    except FileNotFoundError:
+        logging.error(f"{config['found_card']} not found")
+    number = str(found_card["card_number"])
+    if not number.isdigit() or len(number) != 16:
+        logging.info("The card number is incorrect")
+        return False
+
+    checksum = 0
+    for i, digit in enumerate(reversed(number)):
+        if i % 2 == 0:
+            checksum += int(digit)
+        else:
+            checksum += sum(divmod(int(digit) * 2, 10))
+
+    if checksum % 10 == 0:
+        logging.info("The card is correct")
+        return True
+    else:
+        logging.info("The card is incorrect")
+        return False
