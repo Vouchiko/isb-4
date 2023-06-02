@@ -4,6 +4,8 @@ import json
 import multiprocessing as mp
 from functools import partial
 from tqdm import tqdm
+from time import time
+from matplotlib import pyplot as plt
 
 
 def checking_hash(bin: int, config: dict, number: int) -> int:
@@ -65,3 +67,23 @@ def luhn(config: dict) -> bool:
     else:
         logging.info("The card is incorrect")
         return False
+
+
+def get_stats(config: dict) -> None:
+    times = []
+    for i in range(int(config["processes_amount"])):
+        start = time()
+        logging.info(f'number of processes: {i + 1}\n')
+        searching(config, i + 1)
+        times.append(time() - start)
+    plt.figure(figsize=(30, 5))
+    plt.ylabel('Time')
+    plt.xlabel('Processes')
+    plt.title('Time dependence on the number of processes')
+    plt.plot(
+        list(x + 1 for x in range(int(config["processes_amount"]))), times, color="blue")
+    plt.savefig(f'{config["statistic_path"]}')
+    logging.info(f'Time dependence on processes is preserved along the way {config["statistic_path"]}\n')
+
+
+
