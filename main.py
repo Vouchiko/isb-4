@@ -3,10 +3,8 @@ import argparse
 import json
 from functions import searching, luhn, get_stats
 
-
 logger = logging.getLogger()
 logger.setLevel('INFO')
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hash Function Collision Search')
@@ -37,4 +35,4 @@ if __name__ == '__main__':
         get_stats(data)
         logging.info('Data collection completed successfully \n')
     else:
-        logging.error("something went wrong... Try again")
+        logging.error("Incorrect mode! Try again...")
